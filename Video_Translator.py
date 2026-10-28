@@ -469,7 +469,7 @@ def assemble_final_video(source_video, dubbed_audio_path, instrumental_audio_pat
         f"[2:a]aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo,volume={bg_volume}[bg];"
         "[dub][bg]amix=inputs=2:duration=first:dropout_transition=0:normalize=0[a]",
         "-map", "0:v:0", "-map", "[a]",
-        "-c:v", "copy",
+        "-c:v", "libx264", "-crf", "18", "-preset", "medium",
         "-c:a", "aac", "-b:a", "192k", "-ar", str(VOXCPM_OUTPUT_SAMPLE_RATE),
         "-ac", "2", "-shortest", final__full_video_path,
     ])
@@ -546,10 +546,11 @@ def parse_args():
         help="Background music/effects volume relative to the original track in the final mix (default: 0.35)",
     )
     parser.add_argument(
-        "--no-video-reencode",
+        "--low-memory",
         action="store_true",
-        help="Do not re-encode the final video: the source video stream is copied as-is and "
-             "only the audio track is rebuilt. Memory-safe for videos with many subtitle segments.",
+        help="Memory-safe final assembly: the source video is converted to H.264 in one streaming pass "
+             "(same output codec as the default path) instead of opening every subtitle segment in memory. "
+             "Use for videos with many subtitle segments, where the default reconstruction can exhaust RAM.",
     )
     parser.add_argument("--list-languages", action="store_true", help="Print supported language codes")
     return parser.parse_args()
@@ -663,7 +664,7 @@ def main():
     change_ClipSpeed(start, path_ffmpeg, path_mp4, path_wav, final_movie)
     
     final_video_name = os.path.basename(video_path_concat)
-    if args.no_video_reencode:
+    if args.low_memory:
         dubbed_audio_path = build_dubbed_audio(
             start, end, path_ffmpeg, video_path_concat,
             str(Path(os.getcwd()) / "wav" / (Path(final_video_name).stem + "_dubbed.wav")))
