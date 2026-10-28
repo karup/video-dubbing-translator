@@ -139,6 +139,7 @@ def parse_args():
     parser.add_argument("--subtitles", help="Subtitle file (.srt/.vtt) with dialogue text and timing (skips Whisper)")
     parser.add_argument("--subtitle-language", help="Language code of the subtitle file (defaults to target language)")
     parser.add_argument("--bg-volume", type=float, default=0.35, help="Background music/effects volume in the final mix (default: 0.35)")
+    parser.add_argument("--keep-video", action="store_true", help="Keep the source video stream (no re-encode) and rebuild only the audio track (memory-safe for many segments)")
     return parser.parse_args()
 
 
