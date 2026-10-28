@@ -118,7 +118,7 @@ python scripts/run_pipeline.py input.mp4 --source-language ja --target-language 
 
 `--bg-volume` (default `0.35`) scales the background track in the final mix.
 
-`--keep-video` skips the final video re-encode: the source video stream is copied as-is and only the audio track is rebuilt. Use it for videos with many subtitle segments, where the default in-memory reconstruction can exhaust RAM. The output keeps the source's video codec.
+`--no-video-reencode` skips the final video re-encode: the source video stream is copied as-is and only the audio track is rebuilt. Use it for videos with many subtitle segments, where the default in-memory reconstruction can exhaust RAM. The output keeps the source's video codec.
 
 ## How it works
 

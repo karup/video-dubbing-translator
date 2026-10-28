@@ -546,10 +546,10 @@ def parse_args():
         help="Background music/effects volume relative to the original track in the final mix (default: 0.35)",
     )
     parser.add_argument(
-        "--keep-video",
+        "--no-video-reencode",
         action="store_true",
-        help="Keep the source video stream (no re-encode) and rebuild only the audio track. "
-             "Memory-safe for videos with many subtitle segments.",
+        help="Do not re-encode the final video: the source video stream is copied as-is and "
+             "only the audio track is rebuilt. Memory-safe for videos with many subtitle segments.",
     )
     parser.add_argument("--list-languages", action="store_true", help="Print supported language codes")
     return parser.parse_args()
@@ -663,7 +663,7 @@ def main():
     change_ClipSpeed(start, path_ffmpeg, path_mp4, path_wav, final_movie)
     
     final_video_name = os.path.basename(video_path_concat)
-    if args.keep_video:
+    if args.no_video_reencode:
         dubbed_audio_path = build_dubbed_audio(
             start, end, path_ffmpeg, video_path_concat,
             str(Path(os.getcwd()) / "wav" / (Path(final_video_name).stem + "_dubbed.wav")))
