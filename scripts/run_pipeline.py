@@ -164,6 +164,8 @@ def main():
     if args.subtitle_language:
         command += ["--subtitle-language", args.subtitle_language]
     command += ["--bg-volume", str(args.bg_volume)]
+    if args.keep_video:
+        command += ["--keep-video"]
     run(command)
 
     final_output = expected_dubbed_output(video_path)
